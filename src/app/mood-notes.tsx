@@ -10,7 +10,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   centeredText: {
-    width: "100%",
     textAlign: "center",
     fontSize: 32,
     fontWeight: "bold",
@@ -51,6 +50,7 @@ export default function MoodNoteScreen() {
       </View>
       <Text style={styles.centeredText}>Saved Notes:</Text>
       <FlatList 
+        style={{ flexGrow: 0 }}
         data={[]}
         renderItem={({ item }) => <Text>{item}</Text>}
         keyExtractor={(item, index) => index.toString()}
