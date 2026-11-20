@@ -62,7 +62,7 @@ export default function WalkNotesScreen() {
       return;
     }
 
-    const newnote = { text: note, time: new Date().toLocaleString() };
+    const newnote = { text: note.trim(), time: new Date().toLocaleString() };
     const updatedNotes = [...notes, newnote];
     setNotes(updatedNotes);
     await AsyncStorage.setItem('walkNotes', JSON.stringify(updatedNotes));
