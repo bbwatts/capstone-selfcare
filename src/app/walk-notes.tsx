@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useState, useEffectS } from "react";
+import { useState, useEffect } from "react";
 import { View, TextInput, Button, Text, StyleSheet, FlatList } from "react-native";
 
 type WalkNote = {
@@ -64,6 +64,7 @@ export default function WalkNotesScreen() {
     setNote('');
     setStatus('Note saved successfully.');
   };
+
   return (
     <View style={styles.container}>
         <Text style={styles.centeredText}>Walk Notes</Text>
