@@ -4,7 +4,9 @@ import { View, TextInput, Button, Text, StyleSheet, FlatList } from "react-nativ
 
 type WalkNote = {
   text: string;
-  time: string;
+  createdAt: string;
+  id: string;
+  syncStatus: string;
 };
 
 const styles = StyleSheet.create({
@@ -62,7 +64,7 @@ export default function WalkNotesScreen() {
       return;
     }
 
-    const newnote = { text: note.trim(), time: new Date().toLocaleString() };
+    const newnote = { text: note.trim(), createdAt: new Date().toLocaleString(), id: Date.now().toString(), syncStatus: 'pending',};
     const updatedNotes = [...notes, newnote];
     setNotes(updatedNotes);
     await AsyncStorage.setItem('walkNotes', JSON.stringify(updatedNotes));
