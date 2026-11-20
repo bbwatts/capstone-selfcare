@@ -35,7 +35,7 @@ export default function AppTabs() {
       </NativeTabs.Trigger>
 
       <NativeTabs.Trigger name="mood-notes">
-        <NativeTabs.Trigger.Label>Mood Notes</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Label>Walk Notes</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon sf="star" md="rate_review" />
       </NativeTabs.Trigger>
 

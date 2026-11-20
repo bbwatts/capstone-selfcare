@@ -31,17 +31,21 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function MoodNoteScreen() {
+export default function WalkNoteScreen() {
+  const [note, setNote] = useState('');
   return (
     <View style={styles.container}>
-        <Text style={styles.centeredText}>Mood Notes</Text>
+        <Text style={styles.centeredText}>Walk Notes</Text>
       <Text style={styles.statusmessage}>Status: </Text>
       <TextInput
         multiline={true}
         maxLength={200}
-        placeholder="Enter your mood note"
+        value={note}
+        onChangeText={setNote}
+        placeholder="Enter your walk note"
         style={styles.inputText}
       />
+      <Text>{note.length} / 200 characters</Text>
       <View style={styles.button}>
         <Button title="Save Note" onPress={() => {}} />
       </View>
