@@ -57,6 +57,11 @@ export default function WalkNotesScreen() {
       setStatus('Note cannot be empty.');
       return;
     }
+    if (note.length > 200) {
+      setStatus('Note cannot exceed 200 characters.');
+      return;
+    }
+
     const newnote = { text: note, time: new Date().toLocaleString() };
     const updatedNotes = [...notes, newnote];
     setNotes(updatedNotes);
