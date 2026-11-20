@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
 });
 
 export default function WalkNotesScreen() {
-  const [note, setNote] = useState('');
+const [note, setNote] = useState<WalkNote>({text: '', createdAt: '', id: '', syncStatus: ''});
   const [notes, setNotes] = useState<WalkNote[]>([]);
   const [status, setStatus] = useState('');
 
@@ -55,20 +55,20 @@ export default function WalkNotesScreen() {
 
   const saveNote = async () => {
     //uses trim to handle string better
-    if (note.trim() === '') {
+    if (note.text.trim() === '') {
       setStatus('Please enter a note before saving.');
       return;
     }
-    if (note.length > 200) {
+    if (note.text.length > 200) {
       setStatus('Your note must be 200 characters or less.');
       return;
     }
 
-    const newnote = { text: note.trim(), createdAt: new Date().toLocaleString(), id: Date.now().toString(), syncStatus: 'pending',};
-    const updatedNotes = [...notes, newnote];
+    const newNote = { text: note.text.trim(), createdAt: new Date().toLocaleString(), id: Date.now().toString(), syncStatus: 'pending',};
+    const updatedNotes = [...notes, newNote];
     setNotes(updatedNotes);
     await AsyncStorage.setItem('walkNotes', JSON.stringify(updatedNotes));
-    setNote('');
+    setNote(newNote);
     setStatus('Note saved on this device.');
   };
 
@@ -79,12 +79,12 @@ export default function WalkNotesScreen() {
       <TextInput
         multiline={true}
         maxLength={200}
-        value={note}
-        onChangeText={setNote}
+        value={note.text}
+        onChangeText={(text) => setNote({...note, text})}
         placeholder="Enter a note about your walk."
         style={styles.inputText}
       />
-      <Text>{note.length} / 200 characters</Text>
+      <Text>{note.text.length} / 200 characters</Text>
       <View style={styles.button}>
         <Button title="Save Note" onPress={saveNote} />
       </View>
@@ -100,6 +100,6 @@ export default function WalkNotesScreen() {
       />
     </View>
   );
-
-  // need to have a screen to save mood notes with a text input and a button to save the note to async storage. The notes should be saved with a timestamp and displayed in a list below the input. The user should be able to delete notes from the list.
 }
+
+// still need to handle error when saving to AsyncStorage, and also need to implement the sync functionality.
