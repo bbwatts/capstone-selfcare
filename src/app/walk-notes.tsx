@@ -56,11 +56,11 @@ export default function WalkNotesScreen() {
   const saveNote = async () => {
     //uses trim to handle string better
     if (note.trim() === '') {
-      setStatus('Note cannot be empty.');
+      setStatus('Please enter a note before saving.');
       return;
     }
     if (note.length > 200) {
-      setStatus('Note cannot exceed 200 characters.');
+      setStatus('Your note must be 200 characters or less.');
       return;
     }
 
@@ -69,7 +69,7 @@ export default function WalkNotesScreen() {
     setNotes(updatedNotes);
     await AsyncStorage.setItem('walkNotes', JSON.stringify(updatedNotes));
     setNote('');
-    setStatus('Note saved successfully.');
+    setStatus('Note saved on this device.');
   };
 
   return (
@@ -95,8 +95,8 @@ export default function WalkNotesScreen() {
       <FlatList 
         style={{ flexGrow: 0 }}
         data={notes}
-        renderItem={({ item }) => <Text>{item.time} - {item.text}</Text>}
-        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item }) => <Text>{item.createdAt} - {item.text} ({item.syncStatus})</Text>}
+        keyExtractor={(item) => item.id}
       />
     </View>
   );
