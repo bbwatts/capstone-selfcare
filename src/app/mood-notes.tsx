@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState } from "react";
-import { View, TextInput, Button, Text, StyleSheet } from "react-native";
+import { View, TextInput, Button, Text, StyleSheet, FlatList } from "react-native";
 
 const styles = StyleSheet.create({
   container: {
@@ -21,18 +21,38 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     width: "20%",
   },
+  statusmessage: {
+    fontSize: 18,
+    marginBottom: 10,
+  },
+  button: {
+    marginVertical: 10,
+  },
 });
 
 export default function MoodNoteScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.centeredText}>Mood Notes</Text>
+        <Text style={styles.centeredText}>Mood Notes</Text>
+      <Text style={styles.statusmessage}>Status: </Text>
       <TextInput
         multiline={true}
+        maxLength={200}
         placeholder="Enter your mood note"
         style={styles.inputText}
       />
-      <Button title="Save Note" onPress={() => {}} />
+      <View style={styles.button}>
+        <Button title="Save Note" onPress={() => {}} />
+      </View>
+      <View style={styles.button}>
+        <Button title="Sync Notes" onPress={() => {}} />
+      </View>
+      <Text style={styles.centeredText}>Saved Notes:</Text>
+      <FlatList 
+        data={[]}
+        renderItem={({ item }) => <Text>{item}</Text>}
+        keyExtractor={(item, index) => index.toString()}
+      />
     </View>
   );
 
