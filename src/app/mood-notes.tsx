@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Header } from "expo-router/build/react-navigation/index.js";
 import { useState } from "react";
 import { View, TextInput, Button, Text, StyleSheet, FlatList } from "react-native";
 
@@ -9,6 +10,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   centeredText: {
+    width: "100%",
     textAlign: "center",
     fontSize: 32,
     fontWeight: "bold",
