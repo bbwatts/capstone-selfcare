@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useState } from "react";
+import { useState, useEffectS } from "react";
 import { View, TextInput, Button, Text, StyleSheet, FlatList } from "react-native";
 
 type WalkNote = {
@@ -40,6 +40,16 @@ export default function WalkNotesScreen() {
   const [note, setNote] = useState('');
   const [notes, setNotes] = useState<WalkNote[]>([]);
   const [status, setStatus] = useState('');
+
+  useEffect(() => {
+    const loadNotes = async () => {
+      const savedNotes = await AsyncStorage.getItem('walkNotes');
+      if (savedNotes) {
+        setNotes(JSON.parse(savedNotes));
+      }
+    };
+    loadNotes();
+  }, []);
 
   const saveNote = async () => {
     //uses trim to handle string better
