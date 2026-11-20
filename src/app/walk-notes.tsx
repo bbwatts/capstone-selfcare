@@ -57,7 +57,7 @@ export default function WalkNotesScreen() {
   return (
     <View style={styles.container}>
         <Text style={styles.centeredText}>Walk Notes</Text>
-      <Text style={styles.statusmessage}>Status: </Text>
+      <Text style={styles.statusmessage}>Status: {status}</Text>
       <TextInput
         multiline={true}
         maxLength={200}
@@ -76,8 +76,8 @@ export default function WalkNotesScreen() {
       <Text style={styles.centeredText}>Saved Notes:</Text>
       <FlatList 
         style={{ flexGrow: 0 }}
-        data={[]}
-        renderItem={({ item }) => <Text>{item}</Text>}
+        data={notes}
+        renderItem={({ item }) => <Text>{item.time} - {item.text}</Text>}
         keyExtractor={(item, index) => index.toString()}
       />
     </View>
