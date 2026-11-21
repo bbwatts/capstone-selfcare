@@ -27,6 +27,7 @@ const styles = StyleSheet.create({
     padding: 15,
     marginVertical: 20,
     width: "50%",
+    color: "blue",
   },
   statusmessage: {
     fontSize: 18,
@@ -35,6 +36,14 @@ const styles = StyleSheet.create({
   button: {
     width: "30%",
     marginVertical: 10,
+  },
+  flatList: {
+    width: "50%",
+    marginTop: 20,
+    flexGrow: 0,
+  },
+  flatListText: {
+    color: "blue",
   },
 });
 
@@ -93,9 +102,9 @@ const [note, setNote] = useState<WalkNote>({text: '', createdAt: '', id: '', syn
       </View>
       <Text style={styles.centeredText}>Saved Notes:</Text>
       <FlatList 
-        style={{ flexGrow: 0 }}
+        style={styles.flatList}
         data={notes}
-        renderItem={({ item }) => <Text>{item.createdAt} - {item.text} ({item.syncStatus})</Text>}
+        renderItem={({ item }) => <Text style={styles.flatListText}>{item.createdAt} - {item.text} ({item.syncStatus})</Text>}
         keyExtractor={(item) => item.id}
       />
     </View>

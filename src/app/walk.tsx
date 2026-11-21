@@ -128,13 +128,13 @@ export default function Walkscreen() {
         console.log(response);
       });
 
+    getCurrentLocation();
+    setupnotification();
+
     return () => {
       notificationListener.remove();
       responseListener.remove();
     };
-
-    getCurrentLocation();
-    setupnotification();
   }, []);
 
   let text = "Waiting...";
@@ -154,8 +154,8 @@ export default function Walkscreen() {
         2,
       )}`}</Text>
       <WalkMap />
-      <Link href="/mood-notes" style={{ marginTop: 20 }}>
-        <Link href="/mood-notes">Go to Mood-Notes</Link>
+      <Link href="/walk-notes" style={{ marginTop: 20 }}>
+        Go to Walk-Notes
       </Link>
       <Button
         title="Press to schedule a notification"
