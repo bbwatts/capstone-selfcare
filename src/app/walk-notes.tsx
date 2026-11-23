@@ -27,11 +27,12 @@ const styles = StyleSheet.create({
     padding: 15,
     marginVertical: 20,
     width: "50%",
-    color: "blue",
+    color: "#898989",
   },
   statusmessage: {
     fontSize: 18,
     marginBottom: 10,
+    color: "#898989",
   },
   button: {
     width: "30%",
@@ -43,7 +44,7 @@ const styles = StyleSheet.create({
     flexGrow: 0,
   },
   flatListText: {
-    color: "blue",
+    color: "#898989",
   },
 });
 
@@ -93,7 +94,7 @@ const [note, setNote] = useState<WalkNote>({text: '', createdAt: '', id: '', syn
         placeholder="Enter a note about your walk."
         style={styles.inputText}
       />
-      <Text>{note.text.length} / 200 characters</Text>
+      <Text style={styles.statusmessage}>{note.text.length} / 200 characters</Text>
       <View style={styles.button}>
         <Button title="Save Note" onPress={saveNote} />
       </View>

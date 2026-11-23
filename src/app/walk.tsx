@@ -96,7 +96,7 @@ export default function Walkscreen() {
   async function getCurrentLocation() {
     const { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
-      setErrorMsg("Permission to access location was denied");
+      setErrorMsg("Location access is required to use the tracking features.");
       return;
     }
 
@@ -130,7 +130,6 @@ export default function Walkscreen() {
         console.log(response);
       });
 
-    getCurrentLocation();
     setupnotification();
 
     return () => {
@@ -150,7 +149,8 @@ export default function Walkscreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.paragraph}>{text}</Text>
-      <Text>Status: {status}</Text>
+      <Text style={styles.status}>Status: {status}</Text>
+      <Button title="Start Walk" onPress={getCurrentLocation} />
       <Text>Your expo push token: {expoPushToken}</Text>
       <Text>{`Channels: ${JSON.stringify(
         channels.map((c) => c.id),
@@ -158,7 +158,7 @@ export default function Walkscreen() {
         2,
       )}`}</Text>
       <WalkMap />
-      <Link href="/walk-notes" style={{ marginTop: 20 }}>
+      <Link href="/walk-notes" style={styles.link}>
         Go to Walk-Notes
       </Link>
       <Button
@@ -182,15 +182,28 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 20,
+    color: "#898989",
   },
   paragraph: {
     fontSize: 18,
     textAlign: "center",
+    color: "#898989",
   },
   notice: {
     fontSize: 14,
     textAlign: "center",
     marginTop: 20,
     width: "40%",
+    color: "#898989",
+  },
+  status: {
+    fontSize: 16,
+    color: "#898989",
+    marginTop: 8,
+  },
+  link: {
+    fontSize: 16,
+    color: "#1E90FF",
+    marginTop: 8,
   },
 });
