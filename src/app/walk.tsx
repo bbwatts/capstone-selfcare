@@ -95,6 +95,13 @@ export default function Walkscreen() {
 
   const [watch, setWatch] = useState<Location.LocationSubscription | null>(null);
 
+  const [seconds, setSeconds] = useState(0);
+
+  const [noteMsg, setNoteMsg] = useState("");
+
+  const [notificationsOn, setNotificationsOn] = useState(false);
+
+
   async function getCurrentLocation() {
     const { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
@@ -148,11 +155,28 @@ export default function Walkscreen() {
       setWatch(null);
     }
     setStatus("Not tracking");
+    setSeconds(0);
   };
 
+  useEffect(() => {
+  if (status !== "Tracking") return;
+  const timer = setInterval(() => {
+    setSeconds((s) => s + 1);
+  }, 1000);
+  return () => clearInterval(timer);
+}, [status]);
 
   useEffect(() => {
     async function setupnotification() {
+
+      const { status } = await Notifications.requestPermissionsAsync();
+        if (status === "granted") {
+          setNotificationsOn(true);
+          setNoteMsg("Notifications are enabled.");
+        } else {
+          setNoteMsg("Notifications are disabled. Reminders will not appear.");
+        }
+
       registerForPushNotificationsAsync().then(
         (token) => token && setExpoPushToken(token),
       );
@@ -194,17 +218,14 @@ export default function Walkscreen() {
     <View style={styles.container}>
       <Text style={styles.paragraph}>{text}</Text>
       <Text style={styles.status}>Status: {status}</Text>
+      <Text style={styles.status}>Goal: 60 seconds</Text>
+      <Text style={styles.status}>Progress: {seconds} seconds</Text>
+      <Text style={styles.status}>{noteMsg}</Text>
       <Button title="get current Location" onPress={getCurrentLocation} />
       <Button title="Start Walk" onPress={startWalk} />
       <Button title="Pause Walk" onPress={pauseWalk} />
       <Button title="Resume Walk" onPress={resumeWalk} />
       <Button title="Stop Walk" onPress={stopWalk} />
-      <Text>Your expo push token: {expoPushToken}</Text>
-      <Text>{`Channels: ${JSON.stringify(
-        channels.map((c) => c.id),
-        null,
-        2,
-      )}`}</Text>
       <WalkMap />
       <Link href="/walk-notes" style={styles.link}>
         Go to Walk-Notes
@@ -241,7 +262,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: "center",
     marginTop: 20,
-    width: "40%",
+    width: "80%",
     color: "#898989",
   },
   status: {
