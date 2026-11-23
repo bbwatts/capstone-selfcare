@@ -191,7 +191,22 @@ export default function Walkscreen() {
     setSeconds((s) => s + 1);
   }, 1000);
   return () => clearInterval(timer);
-}, [status]);
+  }, [status]);
+
+  useEffect(() => {
+  if (seconds < 60 || goalSent) return;
+  setGoalSent(true);
+  setNoteMsg("Walking goal reached!");
+  if (!notificationsOn) return;
+  Notifications.scheduleNotificationAsync({
+    content: {
+      title: "Goal Reached",
+      body: "Great job! You completed your walking goal.",
+    },
+    trigger: null,
+  });
+  }, [seconds]);
+
 
   useEffect(() => {
     async function setupnotification() {

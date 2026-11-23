@@ -1,52 +1,79 @@
 # Mobile Walking Tracker
 
-An Expo app that shows your current location and tracks your location during a walk.
+A React Native app built with Expo that tracks a walk using the phone's
+location. It shows the current latitude and longitude, tracks how long
+the walk has been going, and uses local notifications to remind the
+user about a paused walk and to celebrate reaching the walking goal.
 
 ## Features
 
-- Shows your current latitude and longitude
-- Shows the current tracking status
-- Get Current Location button: requests foreground location permission and displays your coordinates
-- If location permission is denied, the app shows a message explaining that location access is required to use the tracking features
-- Start Walk button: starts location tracking using watchPositionAsync and updates the coordinates as your location changes, and the status changes to Tracking
-- Privacy notice on the tracking screen explaining what data is collected, that it is only collected while a walk is being tracked, that records are stored locally on the device, and that tracking can be paused or stopped at any time
+- Get Current Location shows the current latitude and longitude
+- Start Walk tracks location while the walk is active
+- Pause, Resume, and Stop controls for a walking session
+- Timer with a 60 second walking goal and a progress display
+- Notification permission request with the status shown in the app
+- Pause reminder notification 10 seconds after a walk is paused
+- Pause reminder is canceled when the walk is resumed or stopped
+- Goal notification when the 60 second goal is reached, sent once per session
+- Privacy notice explaining what location data is collected
 
 ## Privacy
 
-This app collects latitude, longitude, date, and time only while a walk is being tracked. Location records are stored locally on your device. You can pause or stop tracking at any time.
+The app collects latitude, longitude, date, and time only while a walk
+is being tracked. Records are stored locally on the device. The user
+can pause or stop tracking at any time.
 
-## Setup
-
-Install dependencies:
+## Install
 
     npm install
 
-Start the app:
+This installs the project packages, including expo-location and
+expo-notifications.
+
+## Run the App
 
     npx expo start
 
-Then open it in Expo Go on your phone, or in an emulator, by scanning the QR code shown in the terminal.
+Scan the QR code with Expo Go on a physical phone, or open the project
+in an emulator. Notifications should be tested on a real device.
 
 ## How to Use
 
-1. Open the walk tracking screen.
-2. Tap Get Current Location and allow location permission to see your current latitude and longitude.
-3. Tap Start Walk to begin tracking. The status changes to Tracking and the coordinates update as your location changes.
+1. Allow location and notification permissions when asked.
+2. Tap Get Current Location to see the current coordinates.
+3. Tap Start Walk to begin tracking.
+4. Tap Pause Walk to pause. A reminder is scheduled for 10 seconds later.
+5. Tap Resume Walk to continue the same session. The reminder is canceled.
+6. Tap Stop Walk to end the session. The timer and goal reset.
+7. Walk for 60 seconds to reach the goal and get the goal notification.
 
-## Testing
+## Notification Tests
 
 | Test | Result |
 | --- | --- |
-| Location permission approved | Pass |
-| Location permission denied, message shown | Pass |
-| Get Current Location shows latitude and longitude | Pass |
-| Start Walk changes status to Tracking | Pass |
-| Coordinates update while tracking | Pass |
-| App minimized while tracking | Not run, optional |
-| Pause and resume tracking | Not included, optional |
-| Stop tracking | Not included, optional |
-| App closed and reopened, saved records still there | Not included, optional, saved records were not added |
+| Notification permission approved, status message shows enabled | Pass |
+| Notification permission denied, app says reminders are disabled | Pass |
+| Pause a walk, reminder notification appears after about 10 seconds | Pass |
+| Pause then resume before the reminder, reminder does not appear | Pass |
+| Pause then stop before the reminder, reminder does not appear | Pass |
+| Progress counts up while tracking and freezes when paused | Pass |
+| 60 second goal reached, goal notification appears | Pass |
+| Goal notification appears only once in a session | Pass |
+| App minimized, notification still appears | Pass |
 
-## Notes
+## Problems and Solutions
 
-This version covers foreground location tracking. The optional features (background tracking, pause, resume, stop, and locally saved location records) were not included in this version.
+- The app broke after adding the pause reminder because the pause
+  function used await without being marked async, and it had an extra
+  closing brace. Fixed by replacing the pause, resume, and stop
+  functions with corrected async versions.
+- The screen got crowded as features were added. The expo push token
+  and notification channels text from an earlier tutorial took up a
+  lot of space, so those displays were removed (they were only for
+  testing remote push notifications), the privacy notice was widened,
+  and the tracking buttons were placed in a row.
+- Resume at first only restarted tracking and did not cancel the
+  scheduled reminder, so the reminder would have fired during the
+  walk. Fixed by saving the notification ID when the reminder is
+  scheduled and canceling it on resume and stop.
+
