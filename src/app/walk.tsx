@@ -24,7 +24,7 @@ async function schedulePushNotification() {
       body: "Hey come check in! 👋",
       data: { data: "goes here", test: { test1: "more data" } },
     },
-    // have a nice little reminder with user to remind them to log how their day went
+    // have a nice little reminder with user to remind them to log how their walk went
     trigger: {
       type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
       seconds: 2,
@@ -91,21 +91,23 @@ export default function Walkscreen() {
   );
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  useEffect(() => {
-    async function getCurrentLocation() {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
-        return;
-      }
+  const [status, setStatus] = useState("Not tracking");
 
-      let location = await Location.getCurrentPositionAsync({});
-      console.log(location);
-      const { latitude, longitude } = location.coords;
-      console.log(latitude, longitude);
-      setLocation(location);
+  async function getCurrentLocation() {
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      setErrorMsg("Permission to access location was denied");
+      return;
     }
 
+    const currentLocation = await Location.getCurrentPositionAsync({});
+    console.log(currentLocation);
+    const { latitude, longitude } = currentLocation.coords;
+    console.log(latitude, longitude);
+    setLocation(currentLocation);
+  }
+
+  useEffect(() => {
     async function setupnotification() {
       registerForPushNotificationsAsync().then(
         (token) => token && setExpoPushToken(token),
@@ -141,12 +143,14 @@ export default function Walkscreen() {
   if (errorMsg) {
     text = errorMsg;
   } else if (location) {
-    text = JSON.stringify(location);
+    //only need latitude and longitude
+    text = `Latitude: ${location.coords.latitude}\nLongitude: ${location.coords.longitude}`;
   }
 
   return (
     <View style={styles.container}>
       <Text style={styles.paragraph}>{text}</Text>
+      <Text>Status: {status}</Text>
       <Text>Your expo push token: {expoPushToken}</Text>
       <Text>{`Channels: ${JSON.stringify(
         channels.map((c) => c.id),
@@ -163,6 +167,11 @@ export default function Walkscreen() {
           await schedulePushNotification();
         }}
       />
+      <Text style={styles.notice}>
+        Privacy: This app collects your latitude, longitude, date, and time only
+        while a walk is being tracked. Location records are stored locally on your
+        device. You can pause or stop tracking at any time.
+      </Text>
     </View>
   );
 }
@@ -177,5 +186,11 @@ const styles = StyleSheet.create({
   paragraph: {
     fontSize: 18,
     textAlign: "center",
+  },
+  notice: {
+    fontSize: 14,
+    textAlign: "center",
+    marginTop: 20,
+    width: "40%",
   },
 });
