@@ -101,6 +101,10 @@ export default function Walkscreen() {
 
   const [notificationsOn, setNotificationsOn] = useState(false);
 
+  const [reminderId, setReminderId] = useState<string | null>(null);
+
+  const [goalSent, setGoalSent] = useState(false);
+
 
   async function getCurrentLocation() {
     const { status } = await Location.requestForegroundPermissionsAsync();
@@ -137,25 +141,48 @@ export default function Walkscreen() {
   setWatch(sub);
   }
 
-  const pauseWalk = () => {
+  const pauseWalk = async () => {
   if (watch) {
     watch.remove();
     setWatch(null);
   }
   setStatus("Paused");
+    if (!notificationsOn) return;
+    const id = await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "Walk Paused",
+        body: "Your walk is still paused. Open the app when you are ready to continue.",
+      },
+      trigger: {
+        type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
+        seconds: 10,
+      },
+      });
+      setReminderId(id);
+      setNoteMsg("Pause reminder scheduled.");
+    };
+
+  const cancelReminder = async () => {
+    if (!reminderId) return;
+    await Notifications.cancelScheduledNotificationAsync(reminderId);
+    setReminderId(null);
+    setNoteMsg("Pause reminder canceled.");
   };
 
-  const resumeWalk = () => {
+  const resumeWalk = async () => {
+    await cancelReminder();
     startWalk();
   };
 
-  const stopWalk = () => {
+  const stopWalk = async () => {
+    await cancelReminder();
     if (watch) {
       watch.remove();
       setWatch(null);
     }
     setStatus("Not tracking");
     setSeconds(0);
+    setGoalSent(false);
   };
 
   useEffect(() => {
