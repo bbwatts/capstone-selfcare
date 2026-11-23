@@ -93,6 +93,8 @@ export default function Walkscreen() {
 
   const [status, setStatus] = useState("Not tracking");
 
+  const [watch, setWatch] = useState<Location.LocationSubscription | null>(null);
+
   async function getCurrentLocation() {
     const { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
@@ -105,6 +107,27 @@ export default function Walkscreen() {
     const { latitude, longitude } = currentLocation.coords;
     console.log(latitude, longitude);
     setLocation(currentLocation);
+  }
+
+  async function startWalk() {
+  const { status } = await Location.requestForegroundPermissionsAsync();
+  if (status !== "granted") {
+    setErrorMsg("Location access is required to use the tracking features.");
+    return;
+  }
+
+  setStatus("Tracking");
+
+  const sub = await Location.watchPositionAsync(
+    {
+      accuracy: Location.Accuracy.High,
+      distanceInterval: 10,
+    },
+    (location) => {
+      setLocation(location);
+    }
+  );
+  setWatch(sub);
   }
 
   useEffect(() => {
@@ -150,7 +173,8 @@ export default function Walkscreen() {
     <View style={styles.container}>
       <Text style={styles.paragraph}>{text}</Text>
       <Text style={styles.status}>Status: {status}</Text>
-      <Button title="Start Walk" onPress={getCurrentLocation} />
+      <Button title="get current Location" onPress={getCurrentLocation} />
+      <Button title="Start Walk" onPress={startWalk} />
       <Text>Your expo push token: {expoPushToken}</Text>
       <Text>{`Channels: ${JSON.stringify(
         channels.map((c) => c.id),
