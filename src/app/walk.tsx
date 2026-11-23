@@ -221,11 +221,23 @@ export default function Walkscreen() {
       <Text style={styles.status}>Goal: 60 seconds</Text>
       <Text style={styles.status}>Progress: {seconds} seconds</Text>
       <Text style={styles.status}>{noteMsg}</Text>
-      <Button title="get current Location" onPress={getCurrentLocation} />
-      <Button title="Start Walk" onPress={startWalk} />
-      <Button title="Pause Walk" onPress={pauseWalk} />
-      <Button title="Resume Walk" onPress={resumeWalk} />
-      <Button title="Stop Walk" onPress={stopWalk} />
+      <View style={styles.buttonRow}>
+        <View style={styles.buttonBox}>
+          <Button title="get current Location" onPress={getCurrentLocation} />
+        </View>
+        <View style={styles.buttonBox}>
+          <Button title="Start Walk" onPress={startWalk} />
+        </View>
+        <View style={styles.buttonBox}>
+          <Button title="Pause Walk" onPress={pauseWalk} />
+        </View>
+        <View style={styles.buttonBox}>
+          <Button title="Resume Walk" onPress={resumeWalk} />
+        </View>
+        <View style={styles.buttonBox}>
+          <Button title="Stop Walk" onPress={stopWalk} />
+        </View>
+      </View>
       <WalkMap />
       <Link href="/walk-notes" style={styles.link}>
         Go to Walk-Notes
@@ -259,7 +271,7 @@ const styles = StyleSheet.create({
     color: "#898989",
   },
   notice: {
-    fontSize: 14,
+    fontSize: 12,
     textAlign: "center",
     marginTop: 20,
     width: "80%",
@@ -274,5 +286,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#1E90FF",
     marginTop: 8,
+  },
+  buttonRow: {
+  flexDirection: "row",
+  width: "100%",
+  marginTop: 8,
+  },
+  buttonBox: {
+    flex: 0.5,
+    marginHorizontal: 1,
   },
 });
