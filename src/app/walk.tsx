@@ -130,6 +130,27 @@ export default function Walkscreen() {
   setWatch(sub);
   }
 
+  const pauseWalk = () => {
+  if (watch) {
+    watch.remove();
+    setWatch(null);
+  }
+  setStatus("Paused");
+  };
+
+  const resumeWalk = () => {
+    startWalk();
+  };
+
+  const stopWalk = () => {
+    if (watch) {
+      watch.remove();
+      setWatch(null);
+    }
+    setStatus("Not tracking");
+  };
+
+
   useEffect(() => {
     async function setupnotification() {
       registerForPushNotificationsAsync().then(
@@ -175,6 +196,9 @@ export default function Walkscreen() {
       <Text style={styles.status}>Status: {status}</Text>
       <Button title="get current Location" onPress={getCurrentLocation} />
       <Button title="Start Walk" onPress={startWalk} />
+      <Button title="Pause Walk" onPress={pauseWalk} />
+      <Button title="Resume Walk" onPress={resumeWalk} />
+      <Button title="Stop Walk" onPress={stopWalk} />
       <Text>Your expo push token: {expoPushToken}</Text>
       <Text>{`Channels: ${JSON.stringify(
         channels.map((c) => c.id),
